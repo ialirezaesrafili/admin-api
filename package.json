@@ -1,0 +1,40 @@
+{
+  "name": "admin-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ialirezaesrafili/admin-api.git"
+  },
+  "author": "Alireza Esrafili",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ialirezaesrafili/admin-api/issues"
+  },
+  "homepage": "https://github.com/ialirezaesrafili/admin-api#readme",
+  "dependencies": {
+    "auto-bind": "^3.0.0",
+    "bcrypt": "^5.1.1",
+    "cloudinary": "^2.5.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-validator": "^7.2.0",
+    "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.8.3",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.7",
+    "slugify": "^1.6.6",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "validator": "^13.12.0"
+  }
+}
