@@ -1,7 +1,7 @@
 const autoBind = require("auto-bind");
-const { CategoryModel } = require("../models/category.model");
+const {CategoryModel} = require("../models/category.model");
 const slugify = require("slugify");
-const { CategoryMessage } = require("../message/category.message");
+const {CategoryMessage} = require("../message/category.message");
 
 class CategoryService {
     #model;
@@ -13,13 +13,13 @@ class CategoryService {
 
     async createCategory(title) {
         try {
-            const existingCategory = await this.#model.findOne({ title });
+            const existingCategory = await this.#model.findOne({title});
             if (existingCategory) {
                 throw new Error(CategoryMessage.categoryIsExist);
             }
 
-            const slug = slugify(title, { lower: true });
-            const category = await this.#model.create({ title, slug });
+            const slug = slugify(title, {lower: true});
+            const category = await this.#model.create({title, slug});
 
             return category;
         } catch (error) {
@@ -28,7 +28,7 @@ class CategoryService {
         }
     }
 
-    async updateCategory({ title, catId }) {
+    async updateCategory({title, catId}) {
         try {
             const category = await this.#model.findById(catId);
             if (!category) {
@@ -36,7 +36,7 @@ class CategoryService {
             }
 
             category.title = title;
-            category.slug = slugify(title, { lower: true });
+            category.slug = slugify(title, {lower: true});
             await category.save();
 
             return category;
@@ -45,6 +45,27 @@ class CategoryService {
             throw error;
         }
     }
+
+    async deleteCategory(catId) {
+        try {
+            // Check if the category exists
+            const category = await this.#model.findById(catId);
+            if (!category) {
+                throw new Error(CategoryMessage.categoryIsNotExist || "Category does not exist!");
+            }
+
+            // Delete the category
+            const deletedCategory = await this.#model.findByIdAndDelete(catId);
+
+            // Return the deleted category details
+            return deletedCategory;
+
+        } catch (error) {
+            console.error("Error in deleteCategory:", error.message);
+            throw error;
+        }
+    }
+
 }
 
 module.exports = new CategoryService();

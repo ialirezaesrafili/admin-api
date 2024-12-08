@@ -65,6 +65,30 @@ class CategoryController {
             next(new Error("Error during category update"));
         }
     }
+
+    async deleteCategory(req, res, next) {
+        try {
+            const {id: catId} = req.params;
+
+
+            // Validate category ID
+            if (!mongoose.Types.ObjectId.isValid(catId)) {
+                return res.status(httpCode.BAD_REQUEST).json({
+                    status: httpCode.BAD_REQUEST,
+                    message: "Invalid category ID format",
+                });
+            }
+            const category = await this.#service.deleteCategory(catId);
+            return res.status(httpCode.OK).json({
+                message: "Category deleted successfully",
+                data: category
+            })
+
+        } catch (error) {
+            console.log("Error is deleteCategory:", error.message)
+            next(new Error("Error during category delete"))
+        }
+    }
 }
 
 module.exports = new CategoryController();

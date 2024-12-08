@@ -13,6 +13,10 @@ router.patch('/update-cat/:id'
     , auth,
     categoryController.updateCategory);
 
+router.delete('/delete-cat/:id'
+    , auth,
+    categoryController.deleteCategory);
+
 module.exports = {
     CategoryRouter: router,
 };
