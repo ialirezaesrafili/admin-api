@@ -1,23 +1,38 @@
 const jwt = require("jsonwebtoken");
+const {UserModel} = require("../models/user.model");
 
-const authentication = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-
-    // Check if token is provided
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return res.status(401).json({error: "Access denied. No token provided."});
-    }
-
-    const token = authHeader.split(" ")[1]; // Extract the token part
-
-    jwt.verify(token, process.env.SECRET, (err, decoded) => {
-        if (err) {
-            return res.status(403).json({error: "Invalid or expired token."}); // Use 403 for invalid tokens
+const authentication = async (req, res, next) => {
+    try {
+        // Extract token from cookies
+        const token = req?.cookies?.token;
+        if (!token) {
+            return res.status(401).json({error: "Access denied. No token provided."});
         }
 
-        req.user = decoded;
-        next();
-    });
+        // Verify token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        if (typeof decoded === "object" && "id" in decoded) {
+            // Find the user and exclude sensitive fields
+            const user = await UserModel.findById(decoded.id, {password: 0, token: 0}).lean();
+            if (!user) {
+                return res.status(404).json({error: "User not found."});
+            }
+
+            // Attach user information to the request
+            req.user = user;
+            return next();
+        }
+
+        // If decoded data is invalid
+        return res.status(403).json({error: "Invalid token."});
+    } catch (error) {
+
+
+        // Catch-all for other errors
+        next(error);
+    }
 };
 
-module.exports = authentication;
+module.exports = {
+    auth: authentication,
+};

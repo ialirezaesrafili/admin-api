@@ -13,6 +13,7 @@ router.post(
     UserController.register // Register user
 );
 router.post('/login', UserController.login);
+router.post('/logout', UserController.logout);
 
 
 module.exports = {UserRouters: router};

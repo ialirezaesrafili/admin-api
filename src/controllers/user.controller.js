@@ -14,7 +14,7 @@ class UserController {
     // Register method
     async register(req, res, next) {
         try {
-            const { email, password, username, role } = req.body;
+            const {email, password, username, role} = req.body;
             const file = req.file ? req.file.path : null; // Safely handle missing file
 
             // Basic validation
@@ -26,13 +26,13 @@ class UserController {
             }
 
             // Call service to register the user
-            const user = await this.#service.register({ email, password, role, username, file });
+            const user = await this.#service.register({email, password, role, username, file});
 
             // Return success response
             return res.status(httpCode.CREATED).json({
                 status: "success",
                 message: "User registered successfully",
-                data: { user },
+                data: {user},
             });
 
         } catch (error) {
@@ -45,7 +45,7 @@ class UserController {
     // Login method
     async login(req, res, next) {
         try {
-            const { email, password } = req.body;
+            const {email, password} = req.body;
 
             // Basic validation
             if (!email || !password) {
@@ -56,7 +56,7 @@ class UserController {
             }
 
             // Call service to authenticate the user
-            const { user, token } = await this.#service.login({ email, password });
+            const {user, token} = await this.#service.login({email, password});
 
             // Return success response with token
             return res.cookie(Token, token, {
@@ -64,12 +64,25 @@ class UserController {
             }).status(httpCode.OK).json({
                 status: "success",
                 message: "User logged in successfully",
-                data: { user, token }, // Include token in response
+                data: {user, token}, // Include token in response
             });
 
         } catch (error) {
             console.error("Error during login:", error); // Log the error
             return next(error); // Pass the error to the error-handling middleware
+        }
+    }
+
+    // Logout method
+
+    async logout(req, res, next) {
+        try {
+            res.clearCookie(Token).status(httpCode.OK).json({
+                message: "User logged out successfully",
+
+            });
+        } catch (error) {
+            next(error.message);
         }
     }
 }

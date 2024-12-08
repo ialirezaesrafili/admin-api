@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const swaggerUi = require("swagger-ui-express");
 const dotEnv = require('dotenv');
 const db = require('./src/config/mongoose.config');
@@ -21,6 +22,7 @@ async function main() {
         // Middleware
         app.use(express.json());
         app.use(express.urlencoded({extended: true}));
+        app.use(bodyParser.urlencoded({extended: true}));
         // app.use(cors());
         app.use(cors({
             origin: process.env.CLIENT_URL || '*',
